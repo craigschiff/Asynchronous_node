@@ -6,18 +6,21 @@ let newDir = 'files/moved'
 
 const script = (originalDirectory, newDir) => {
   let executeFiles = []
-  let files = Rename.directoryFiles(originalDirectory, newDir)
-  .then((files) => {
-    for (let i = 0; i < files.length; ++i) {
-      executeFiles.push(files[i].appendAndMoveFile())
-    }
-    Promise.all(executeFiles)
-    .then(() => {
-      return checkErrors(files)
+  Rename.checkDirectoryExists(newDir)
+  .then(() => {
+    let files = Rename.directoryFiles(originalDirectory, newDir)
+    .then((files) => {
+      for (let i = 0; i < files.length; ++i) {
+        executeFiles.push(files[i].appendAndMoveFile())
+      }
+      Promise.all(executeFiles)
+      .then(() => {
+        return checkErrors(files)
+      })
     })
-  })
-  .catch((error) => {
-    console.log(error)
+    .catch((error) => {
+      console.log(error)
+    })
   })
 }
 
